@@ -41,3 +41,21 @@ This sample data is automatically loaded into the PostgreSQL+PostGIS database du
 ### Data Sources
 
 Population data is approximate and for demonstration purposes only.
+
+## Highways Data
+
+### TP.HCM - Trung Lương Expressway
+
+- **Name**: Cao tốc TP Hồ Chí Minh - Trung Lương
+- **English Name**: Ho Chi Minh City - Trung Luong Expressway
+- **Type**: Expressway
+- **Length**: 62 km
+- **Lanes**: 4 lanes
+- **Max Speed**: 120 km/h
+- **Status**: Operational
+- **Opened**: July 31, 2010
+- **Description**: First expressway in Vietnam, connecting Ho Chi Minh City with Mekong Delta region
+
+**Coordinates**: LineString from HCMC (106.6297, 10.8231) to Trung Luong (106.7650, 10.4500)
+
+**Source**: OpenStreetMap, Vietnam Expressway Corporation

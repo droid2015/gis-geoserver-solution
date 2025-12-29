@@ -105,9 +105,20 @@ const MapComponent = ({ layers, onFeatureClick }) => {
           ),
         });
 
-        const vectorLayer = new VectorLayer({
-          source: vectorSource,
-          style: new Style({
+        // Define style based on layer type
+        let layerStyle;
+        if (layerConfig.style === 'highway' || layerConfig.name === 'highways') {
+          // Highway style - orange line
+          layerStyle = new Style({
+            stroke: new Stroke({
+              color: '#FF6B00',
+              width: 4,
+              lineCap: 'round'
+            }),
+          });
+        } else {
+          // Default style - for points and polygons
+          layerStyle = new Style({
             image: new CircleStyle({
               radius: 6,
               fill: new Fill({ color: '#3399CC' }),
@@ -115,7 +126,12 @@ const MapComponent = ({ layers, onFeatureClick }) => {
             }),
             fill: new Fill({ color: 'rgba(51, 153, 204, 0.2)' }),
             stroke: new Stroke({ color: '#3399CC', width: 2 }),
-          }),
+          });
+        }
+
+        const vectorLayer = new VectorLayer({
+          source: vectorSource,
+          style: layerStyle,
           opacity: layerConfig.opacity || 1.0,
           properties: { name: layerConfig.name },
         });

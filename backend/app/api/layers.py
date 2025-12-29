@@ -2,10 +2,11 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
-from app.models.spatial import Layer
-from app.schemas.spatial import LayerResponse, LayerCreate, LayerUpdate
-from sqlalchemy import text
+from app.models.spatial import Layer, Highway
+from app.schemas.spatial import LayerResponse, LayerCreate, LayerUpdate, HighwayGeoJSON
+from sqlalchemy import text, func
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 
@@ -109,4 +110,39 @@ def delete_layer(layer_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         logger.error(f"Error deleting layer: {e}")
         db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/highways", response_model=List[HighwayGeoJSON])
+async def get_highways(db: Session = Depends(get_db)):
+    """Get all highways as GeoJSON"""
+    try:
+        highways = db.query(Highway).all()
+        
+        result = []
+        for highway in highways:
+            # Get the geometry as GeoJSON
+            geom_json = db.scalar(func.ST_AsGeoJSON(highway.geom))
+            
+            highway_dict = {
+                "id": highway.id,
+                "name": highway.name,
+                "name_en": highway.name_en,
+                "type": highway.type,
+                "length_km": highway.length_km,
+                "lanes": highway.lanes,
+                "max_speed": highway.max_speed,
+                "status": highway.status,
+                "start_point": highway.start_point,
+                "end_point": highway.end_point,
+                "opened_date": highway.opened_date,
+                "description": highway.description,
+                "created_at": highway.created_at,
+                "geometry": json.loads(geom_json) if geom_json else None
+            }
+            result.append(highway_dict)
+        
+        return result
+    except Exception as e:
+        logger.error(f"Error getting highways: {e}")
         raise HTTPException(status_code=500, detail=str(e))

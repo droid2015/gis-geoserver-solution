@@ -30,6 +30,12 @@ export const layerService = {
     const response = await api.delete(`/api/layers/${id}`);
     return response.data;
   },
+
+  // Get highways
+  getHighways: async () => {
+    const response = await api.get('/api/layers/highways');
+    return response.data;
+  },
 };
 
 export default layerService;

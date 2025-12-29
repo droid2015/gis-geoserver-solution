@@ -178,6 +178,59 @@ def publish_layer(workspace='gis_workspace', datastore='postgis_store',
         return False
 
 
+def publish_highway_layer():
+    """Publish highways layer to GeoServer"""
+    print("Publishing highways layer...")
+    
+    workspace = 'gis_workspace'
+    datastore = 'postgis_store'
+    
+    layer_config = {
+        "featureType": {
+            "name": "highways",
+            "nativeName": "highways",
+            "title": "Vietnam Highways",
+            "abstract": "Major highways and expressways in Vietnam",
+            "srs": "EPSG:4326",
+            "enabled": True,
+            "store": {
+                "@class": "dataStore",
+                "name": f"{workspace}:{datastore}"
+            }
+        }
+    }
+    
+    response = requests.post(
+        f"{REST_URL}/workspaces/{workspace}/datastores/{datastore}/featuretypes",
+        auth=AUTH,
+        headers={"Content-Type": "application/json"},
+        json=layer_config
+    )
+    
+    if response.status_code in [200, 201]:
+        print("✅ Highways layer published")
+        
+        # Apply style
+        style_data = {
+            "layer": {
+                "defaultStyle": {
+                    "name": "highway_style"
+                }
+            }
+        }
+        
+        requests.put(
+            f"{REST_URL}/layers/{workspace}:highways",
+            auth=AUTH,
+            headers={"Content-Type": "application/json"},
+            json=style_data
+        )
+        print("✅ Highway style applied")
+    else:
+        print(f"✗ Failed to publish highways layer: {response.text}")
+
+
+
 def main():
     """Main configuration function"""
     print("=" * 60)
@@ -199,6 +252,9 @@ def main():
     # Publish sample layer
     if not publish_layer('gis_workspace', 'postgis_store', 'vietnam_cities', 'Vietnam Cities'):
         sys.exit(1)
+    
+    # Publish highways layer
+    publish_highway_layer()
     
     print("=" * 60)
     print("✅ GeoServer configuration completed successfully!")
