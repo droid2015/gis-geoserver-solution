@@ -1,0 +1,55 @@
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+.mouse-position {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.ol-control button {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 2px;
+  color: #333;
+  cursor: pointer;
+  font-size: 1.14em;
+  height: 1.375em;
+  width: 1.375em;
+}
+
+.ol-control button:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.ol-zoom {
+  top: 0.5em;
+  left: 0.5em;
+}
+
+.ol-scale-line {
+  background: rgba(0, 60, 136, 0.3);
+  border-radius: 4px;
+  bottom: 8px;
+  left: 8px;
+  padding: 2px;
+  position: absolute;
+}
+
+.ol-full-screen {
+  top: 0.5em;
+  right: 0.5em;
+}
