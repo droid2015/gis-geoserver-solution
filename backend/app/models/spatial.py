@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Float, DateTime, Text
+from sqlalchemy import Column, Integer, String, Boolean, Float, DateTime, Text, Date
 from sqlalchemy.sql import func
 from geoalchemy2 import Geometry
 from app.database import Base
@@ -33,4 +33,24 @@ class VietnamCity(Base):
     description = Column(Text)
     type = Column(String(50))
     geom = Column(Geometry('POINT', srid=4326))
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class Highway(Base):
+    """Highways model"""
+    __tablename__ = "highways"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False)
+    name_en = Column(String(255))
+    type = Column(String(100))
+    length_km = Column(Float)
+    lanes = Column(Integer)
+    max_speed = Column(Integer)
+    status = Column(String(50))
+    start_point = Column(String(255))
+    end_point = Column(String(255))
+    opened_date = Column(Date)
+    description = Column(Text)
+    geom = Column(Geometry('LINESTRING', srid=4326))
     created_at = Column(DateTime(timezone=True), server_default=func.now())

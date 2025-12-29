@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any, List
-from datetime import datetime
+from datetime import datetime, date
 
 
 class LayerBase(BaseModel):
@@ -92,3 +92,32 @@ class UploadResponse(BaseModel):
     layer_name: Optional[str] = None
     feature_count: Optional[int] = None
     errors: Optional[List[str]] = None
+
+
+class HighwayBase(BaseModel):
+    """Base schema for highway"""
+    name: str
+    name_en: Optional[str] = None
+    type: Optional[str] = None
+    length_km: Optional[float] = None
+    lanes: Optional[int] = None
+    max_speed: Optional[int] = None
+    status: Optional[str] = None
+    start_point: Optional[str] = None
+    end_point: Optional[str] = None
+    opened_date: Optional[date] = None
+    description: Optional[str] = None
+
+
+class Highway(HighwayBase):
+    """Highway schema"""
+    id: int
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
+
+class HighwayGeoJSON(Highway):
+    """Highway schema with GeoJSON geometry"""
+    geometry: dict

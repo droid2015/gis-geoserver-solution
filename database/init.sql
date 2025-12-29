@@ -65,3 +65,76 @@ CREATE TRIGGER update_layers_updated_at BEFORE UPDATE ON layers
 INSERT INTO layers (name, title, description, geometry_type, srid, visible, opacity)
 VALUES ('vietnam_cities', 'Các thành phố Việt Nam', 'Sample data - Vietnam cities with population', 'Point', 4326, true, 1.0)
 ON CONFLICT (name) DO NOTHING;
+
+-- Create highways table
+CREATE TABLE IF NOT EXISTS highways (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    name_en VARCHAR(255),
+    type VARCHAR(100), -- highway_type: expressway, highway, etc.
+    length_km FLOAT,
+    lanes INTEGER,
+    max_speed INTEGER, -- km/h
+    status VARCHAR(50), -- operational, under_construction, planned
+    start_point VARCHAR(255),
+    end_point VARCHAR(255),
+    opened_date DATE,
+    description TEXT,
+    geom GEOMETRY(LineString, 4326),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_highways_geom ON highways USING GIST(geom);
+CREATE INDEX idx_highways_name ON highways(name);
+
+-- Insert TP.HCM - Trung Lương Expressway
+-- Coordinates are approximate path from HCM to Trung Luong
+INSERT INTO highways (
+    name, 
+    name_en, 
+    type, 
+    length_km, 
+    lanes, 
+    max_speed, 
+    status,
+    start_point,
+    end_point,
+    opened_date,
+    description,
+    geom
+) VALUES (
+    'Cao tốc TP Hồ Chí Minh - Trung Lương',
+    'Ho Chi Minh City - Trung Luong Expressway',
+    'Expressway',
+    62.0,
+    4,
+    120,
+    'operational',
+    'TP Hồ Chí Minh',
+    'Trung Lương, Tiền Giang',
+    '2010-07-31',
+    'Cao tốc kết nối TP.HCM với khu vực Đồng bằng sông Cửu Long, là tuyến cao tốc đầu tiên của Việt Nam. Chiều dài 62km với 4 làn xe, tốc độ tối đa 120km/h.',
+    ST_SetSRID(ST_GeomFromText('LINESTRING(
+        106.6297 10.8231,
+        106.6350 10.7950,
+        106.6400 10.7700,
+        106.6500 10.7450,
+        106.6600 10.7200,
+        106.6700 10.6950,
+        106.6800 10.6700,
+        106.6900 10.6450,
+        106.7000 10.6200,
+        106.7100 10.5950,
+        106.7200 10.5700,
+        106.7300 10.5450,
+        106.7400 10.5200,
+        106.7500 10.4950,
+        106.7600 10.4700,
+        106.7650 10.4500
+    )'), 4326)
+);
+
+-- Insert initial layer metadata for highways
+INSERT INTO layers (name, title, description, geometry_type, srid, visible, opacity)
+VALUES ('highways', 'Vietnam Highways', 'Major highways and expressways in Vietnam', 'LineString', 4326, true, 1.0)
+ON CONFLICT (name) DO NOTHING;

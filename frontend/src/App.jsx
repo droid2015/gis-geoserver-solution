@@ -8,6 +8,7 @@ import LayerList from './components/Layers/LayerList';
 import FileUpload from './components/Upload/FileUpload';
 import SpatialQuery from './components/Query/SpatialQuery';
 import queryService from './services/queryService';
+import layerService from './services/layerService';
 import { toast } from 'react-toastify';
 import './App.css';
 
@@ -17,8 +18,19 @@ function App() {
 
   useEffect(() => {
     // Load initial data
-    loadVietnamCities();
+    loadInitialLayers();
   }, []);
+
+  const loadInitialLayers = async () => {
+    try {
+      // Load Vietnam cities
+      await loadVietnamCities();
+      // Load highways
+      await loadHighways();
+    } catch (error) {
+      console.error('Error loading initial layers:', error);
+    }
+  };
 
   const loadVietnamCities = async () => {
     try {
@@ -26,7 +38,8 @@ function App() {
         102.0, 8.0, 110.0, 24.0
       ]);
       if (results && results.features) {
-        setMapLayers([
+        setMapLayers((prev) => [
+          ...prev.filter((l) => l.name !== 'vietnam_cities'),
           {
             name: 'vietnam_cities',
             type: 'vector',
@@ -41,6 +54,47 @@ function App() {
     }
   };
 
+  const loadHighways = async () => {
+    try {
+      const highways = await layerService.getHighways();
+      if (highways && highways.length > 0) {
+        // Convert highways to GeoJSON features
+        const features = highways.map((highway) => ({
+          type: 'Feature',
+          geometry: highway.geometry,
+          properties: {
+            id: highway.id,
+            name: highway.name,
+            name_en: highway.name_en,
+            type: highway.type,
+            length_km: highway.length_km,
+            lanes: highway.lanes,
+            max_speed: highway.max_speed,
+            status: highway.status,
+            start_point: highway.start_point,
+            end_point: highway.end_point,
+            opened_date: highway.opened_date,
+            description: highway.description,
+          },
+        }));
+
+        setMapLayers((prev) => [
+          ...prev.filter((l) => l.name !== 'highways'),
+          {
+            name: 'highways',
+            type: 'vector',
+            features: features,
+            visible: true,
+            opacity: 1.0,
+            style: 'highway',
+          },
+        ]);
+      }
+    } catch (error) {
+      console.error('Error loading highways:', error);
+    }
+  };
+
   const handleLayersChange = (layers) => {
     // Convert layer metadata to map layers
     // For now, just update visibility and opacity
@@ -51,7 +105,7 @@ function App() {
     toast.success('Upload successful! Reloading map...');
     // Reload the layer
     setTimeout(() => {
-      loadVietnamCities();
+      loadInitialLayers();
     }, 1000);
   };
 
