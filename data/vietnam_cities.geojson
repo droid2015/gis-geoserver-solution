@@ -1,0 +1,152 @@
+{
+  "type": "FeatureCollection",
+  "name": "vietnam_cities",
+  "crs": {
+    "type": "name",
+    "properties": {
+      "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hà Nội",
+        "name_en": "Hanoi",
+        "population": 8000000,
+        "type": "Capital",
+        "description": "Capital of Vietnam"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [105.8342, 21.0278]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "TP Hồ Chí Minh",
+        "name_en": "Ho Chi Minh City",
+        "population": 9000000,
+        "type": "City",
+        "description": "Largest city in Vietnam"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [106.6297, 10.8231]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Đà Nẵng",
+        "name_en": "Da Nang",
+        "population": 1200000,
+        "type": "City",
+        "description": "Central coast city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [108.2022, 16.0544]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Hải Phòng",
+        "name_en": "Hai Phong",
+        "population": 2000000,
+        "type": "City",
+        "description": "Northern port city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [106.6881, 20.8449]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Cần Thơ",
+        "name_en": "Can Tho",
+        "population": 1200000,
+        "type": "City",
+        "description": "Mekong Delta city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [105.7467, 10.0452]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Huế",
+        "name_en": "Hue",
+        "population": 340000,
+        "type": "Province Capital",
+        "description": "Ancient imperial capital"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [107.5955, 16.4637]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Nha Trang",
+        "name_en": "Nha Trang",
+        "population": 400000,
+        "type": "City",
+        "description": "Coastal resort city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [109.1967, 12.2388]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Vũng Tàu",
+        "name_en": "Vung Tau",
+        "population": 450000,
+        "type": "City",
+        "description": "Southern coastal city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [107.0843, 10.3460]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Quy Nhơn",
+        "name_en": "Quy Nhon",
+        "population": 280000,
+        "type": "City",
+        "description": "Central coast city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [109.2189, 13.7830]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Buôn Ma Thuột",
+        "name_en": "Buon Ma Thuot",
+        "population": 340000,
+        "type": "Province Capital",
+        "description": "Central Highlands city"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [108.0378, 12.6726]
+      }
+    }
+  ]
+}
