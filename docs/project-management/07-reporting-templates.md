@@ -98,6 +98,8 @@ Templates chuẩn cho các loại báo cáo trong dự án.
 ---
 
 **Next standup:** Tomorrow, 9:00 AM
+## 📅 Weekly Progress Report
+### Template
 Subject: GIS Project - Week [X] Progress Report
 
 ---
