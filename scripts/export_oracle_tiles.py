@@ -1,20 +1,31 @@
 """
 Export tiles from Oracle BANDONEN table to filesystem for GeoServer/GeoWebCache
 """
-import oracledb
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from sqlalchemy import create_engine, text
+from sqlalchemy.engine import Engine, Result
 
 # Load environment variables
 load_dotenv('.env.oracle')
 
-# Oracle connection config
-ORACLE_CONFIG = {
-    'user': os.getenv('ORACLE_USER', 'DOXASPC'),
-    'password': os.getenv('ORACLE_PASSWORD', 'your_password'),
-    'dsn': f"{os.getenv('ORACLE_HOST', 'localhost')}:{os.getenv('ORACLE_PORT', '1521')}/{os.getenv('ORACLE_SERVICE', 'ORCL')}"
-}
+# Build Oracle connection string
+def get_connection_string() -> str:
+    """Build Oracle connection string for SQLAlchemy"""
+    user = os.getenv('ORACLE_USER', 'DOXASPC')
+    password = os.getenv('ORACLE_PASSWORD', 'your_password')
+    host = os.getenv('ORACLE_HOST', 'localhost')
+    port = os.getenv('ORACLE_PORT', '1521')
+    service = os.getenv('ORACLE_SERVICE', 'ORCL')
+    
+    return f"oracle+oracledb://{user}:{password}@{host}:{port}/?service_name={service}"
+
+# Create SQLAlchemy engine
+def create_oracle_engine() -> Engine:
+    """Create SQLAlchemy engine for Oracle database"""
+    connection_string = get_connection_string()
+    return create_engine(connection_string, echo=False)
 
 # Output directory for tiles
 OUTPUT_DIR = os.getenv('OUTPUT_DIR', './tiles_output')
@@ -32,44 +43,42 @@ def get_tile_extension(tile_type):
 def export_tiles():
     """Export tiles from Oracle to filesystem in TMS/XYZ format"""
     
-    # Connect to Oracle
-    connection = oracledb.connect(**ORACLE_CONFIG)
-    cursor = connection.cursor()
+    # Create engine and connect
+    engine = create_oracle_engine()
     
     print("Exporting tiles from Oracle...")
     
     # Query all tiles
-    query = """
+    query = text("""
         SELECT TYPE, X, Y, ZOOM, TILE 
         FROM BANDONEN 
         ORDER BY ZOOM, Y, X
-    """
-    
-    cursor.execute(query)
+    """)
     
     tile_count = 0
-    for row in cursor:
-        tile_type, x, y, zoom, tile_blob = row
-        
-        # Create directory structure: tiles/{zoom}/{x}/{y}.png
-        tile_dir = os.path.join(OUTPUT_DIR, str(zoom), str(x))
-        Path(tile_dir).mkdir(parents=True, exist_ok=True)
-        
-        # Determine file extension based on type
-        extension = get_tile_extension(tile_type)
-        tile_path = os.path.join(tile_dir, f"{y}.{extension}")
-        
-        # Write tile to file
-        if tile_blob:
-            with open(tile_path, 'wb') as f:
-                f.write(tile_blob.read())
-            tile_count += 1
-            
-            if tile_count % 1000 == 0:
-                print(f"Exported {tile_count} tiles...")
     
-    cursor.close()
-    connection.close()
+    with engine.connect() as connection:
+        result: Result = connection.execute(query)
+        
+        for row in result:
+            tile_type, x, y, zoom, tile_blob = row
+            
+            # Create directory structure: tiles/{zoom}/{x}/{y}.png
+            tile_dir = os.path.join(OUTPUT_DIR, str(zoom), str(x))
+            Path(tile_dir).mkdir(parents=True, exist_ok=True)
+            
+            # Determine file extension based on type
+            extension = get_tile_extension(tile_type)
+            tile_path = os.path.join(tile_dir, f"{y}.{extension}")
+            
+            # Write tile to file
+            if tile_blob:
+                with open(tile_path, 'wb') as f:
+                    f.write(tile_blob)
+                tile_count += 1
+                
+                if tile_count % 1000 == 0:
+                    print(f"Exported {tile_count} tiles...")
     
     print(f"Export completed! Total tiles: {tile_count}")
     print(f"Tiles saved to: {OUTPUT_DIR}")
@@ -78,8 +87,8 @@ def export_to_mbtiles():
     """Export tiles from Oracle to MBTiles format"""
     import sqlite3
     
-    connection = oracledb.connect(**ORACLE_CONFIG)
-    cursor = connection.cursor()
+    # Create engine
+    engine = create_oracle_engine()
     
     # Create MBTiles database
     mbtiles_path = os.path.join(OUTPUT_DIR, 'basemap.mbtiles')
@@ -121,30 +130,31 @@ def export_to_mbtiles():
     print("Exporting to MBTiles format...")
     
     # Query and insert tiles
-    query = "SELECT X, Y, ZOOM, TILE FROM BANDONEN ORDER BY ZOOM, Y, X"
-    cursor.execute(query)
+    query = text("SELECT X, Y, ZOOM, TILE FROM BANDONEN ORDER BY ZOOM, Y, X")
     
     tile_count = 0
-    for row in cursor:
-        x, y, zoom, tile_blob = row
+    
+    with engine.connect() as connection:
+        result: Result = connection.execute(query)
         
-        # MBTiles uses TMS scheme (Y axis flipped)
-        tms_y = (2 ** zoom) - 1 - y
-        
-        if tile_blob:
-            mbtiles_cursor.execute(
-                'INSERT OR REPLACE INTO tiles (zoom_level, tile_column, tile_row, tile_data) VALUES (?, ?, ?, ?)',
-                (zoom, x, tms_y, tile_blob.read())
-            )
-            tile_count += 1
+        for row in result:
+            x, y, zoom, tile_blob = row
             
-            if tile_count % 1000 == 0:
-                print(f"Exported {tile_count} tiles...")
-                mbtiles_conn.commit()
+            # MBTiles uses TMS scheme (Y axis flipped)
+            tms_y = (2 ** zoom) - 1 - y
+            
+            if tile_blob:
+                mbtiles_cursor.execute(
+                    'INSERT OR REPLACE INTO tiles (zoom_level, tile_column, tile_row, tile_data) VALUES (?, ?, ?, ?)',
+                    (zoom, x, tms_y, tile_blob)
+                )
+                tile_count += 1
+                
+                if tile_count % 1000 == 0:
+                    print(f"Exported {tile_count} tiles...")
+                    mbtiles_conn.commit()
     
     mbtiles_conn.commit()
-    cursor.close()
-    connection.close()
     mbtiles_cursor.close()
     mbtiles_conn.close()
     
