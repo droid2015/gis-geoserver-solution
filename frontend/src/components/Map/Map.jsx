@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
+import TileWMS from 'ol/source/TileWMS';
 import OSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls, ScaleLine, FullScreen, MousePosition } from 'ol/control';
@@ -92,7 +93,26 @@ const MapComponent = ({ layers, onFeatureClick }) => {
     layers.forEach((layerConfig) => {
       if (!layerConfig.visible) return;
 
-      if (layerConfig.type === 'vector' && layerConfig.features) {
+      // GeoServer WMS Layer
+      if (layerConfig.type === 'wms') {
+        const wmsLayer = new TileLayer({
+          source: new TileWMS({
+            url: layerConfig.url || 'http://localhost:8080/geoserver/wms',
+            params: {
+              'LAYERS': layerConfig.layers,
+              'TILED': true,
+              'VERSION': '1.1.0'
+            },
+            serverType: 'geoserver',
+            crossOrigin: 'anonymous'
+          }),
+          opacity: layerConfig.opacity || 1.0,
+          properties: { name: layerConfig.name }
+        });
+        map.addLayer(wmsLayer);
+      }
+      // Vector Layer
+      else if (layerConfig.type === 'vector' && layerConfig.features) {
         const vectorSource = new VectorSource({
           features: new GeoJSON().readFeatures(
             {

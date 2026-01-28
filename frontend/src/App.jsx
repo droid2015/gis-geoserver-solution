@@ -23,13 +23,30 @@ function App() {
 
   const loadInitialLayers = async () => {
     try {
+      // Load GeoServer WMS layer for highways
+      loadGeoServerHighways();
+      
       // Load Vietnam cities
       await loadVietnamCities();
-      // Load highways
-      await loadHighways();
+      // Load highways from backend (optional)
+      // await loadHighways();
     } catch (error) {
       console.error('Error loading initial layers:', error);
     }
+  };
+
+  const loadGeoServerHighways = () => {
+    setMapLayers((prev) => [
+      ...prev.filter((l) => l.name !== 'geoserver_highways'),
+      {
+        name: 'geoserver_highways',
+        type: 'wms',
+        layers: 'vietnam_data:highways',  // Thay your_workspace bằng workspace của bạn
+        url: 'http://localhost:8080/geoserver/wms',
+        visible: true,
+        opacity: 1.0,
+      },
+    ]);
   };
 
   const loadVietnamCities = async () => {
