@@ -4,7 +4,7 @@ React-based web client cho hệ thống GIS với OpenLayers.
 
 ## Tính năng
 
-- Interactive map với OpenLayers 9
+- Interactive map với OpenLayers 8
 - Layer management (toggle visibility, opacity)
 - File upload (Shapefile, GeoJSON)
 - Spatial queries

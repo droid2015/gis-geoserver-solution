@@ -49,10 +49,10 @@ Assignees: @droid2015
 Projects: GIS System - 12 Week Sprint
 
 ## 🎯 Mục tiêu
-Install PostgreSQL: 16 + PostGIS 3.4 và cấu hình database
+Install PostgreSQL 15 + PostGIS 3.4 và cấu hình database
 
 ## ✅ Checklist
-- [x] Install PostgreSQL: 16
+- [x] Install PostgreSQL 15
 - [x] Install PostGIS 3.4
 - [x] Create database `gisdb`
 - [ ] Configure postgresql.conf
@@ -108,7 +108,7 @@ git checkout -b bugfix/issue-15-login-error
 
 # Commit with meaningful message
 git add .
-git commit -m "feat(database): Install PostgreSQL: 16 and PostGIS 3.4
+git commit -m "feat(database): Install PostgreSQL 15 and PostGIS 3.4
 
 - Install PostgreSQL from official repo
 - Install PostGIS extension
@@ -155,7 +155,7 @@ Refs #10
 
 ```markdown
 ## ✅ Checklist
-- [x] Install PostgreSQL: 16
+- [x] Install PostgreSQL 15
 - [x] Install PostGIS 3.4
 - [x] Create database `gisdb`
 - [x] Create user `gisuser`
@@ -174,7 +174,7 @@ Click vào checkbox để toggle status.
 ## Progress Update - 2025-12-30
 
 ✅ **Completed today:**
-- Installed PostgreSQL: 16 successfully
+- Installed PostgreSQL 15 successfully
 - Installed PostGIS 3.4
 - Created database and user
 
@@ -255,7 +255,7 @@ git push origin feature/issue-2-postgresql-setup --force-with-lease
 Closes #2
 
 ## Changes
-- Installed PostgreSQL: 16
+- Installed PostgreSQL 15
 - Installed PostGIS 3.4
 - Created database `gisdb` and user `gisuser`
 - Configured postgresql.conf for performance
@@ -698,7 +698,7 @@ Examples:
 ✅ **Good:**
 ```markdown
 ## Goal
-Install PostgreSQL: 16 + PostGIS 3.4 on database server
+Install PostgreSQL 15 + PostGIS 3.4 on database server
 
 ## Steps
 1. Add PostgreSQL repository
@@ -727,7 +727,7 @@ Install database
 🔄 In Progress: PostGIS configuration
 ⏱️ Time: 3 hours
 
-Encountered issue with PostGIS 3.4 compatibility.
+Encountered issue with PostGIS 3.3 compatibility.
 Upgraded to 3.4, now working.
 
 Next: Test spatial queries

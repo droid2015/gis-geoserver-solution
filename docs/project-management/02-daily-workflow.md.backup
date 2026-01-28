@@ -148,7 +148,7 @@
 
 ✅ **Completed:**
 - Setup Docker on App server
-- Install PostgreSQL: 16
+- Install PostgreSQL 15
 - Create database `gisdb`
 
 🔄 **In Progress:**
@@ -171,7 +171,7 @@
 Issue #2:  Setup PostgreSQL + PostGIS
 
 ## Checklist
-- [x] Install PostgreSQL: 16
+- [x] Install PostgreSQL 15
 - [x] Install PostGIS 3.4
 - [x] Create database `gisdb`
 - [x] Create user `gisuser`
@@ -229,7 +229,7 @@ Implement PostgreSQL + PostGIS setup on database server
 Closes #2
 
 ## Changes
-- Installed PostgreSQL: 16
+- Installed PostgreSQL 15
 - Installed PostGIS 3.4
 - Created database and user
 - Configured performance settings

@@ -5,9 +5,9 @@
 A complete open-source GIS solution has been successfully implemented with:
 
 - ✅ **Backend**: FastAPI with PostgreSQL+PostGIS integration
-- ✅ **Frontend**: React 18 with OpenLayers 9 for interactive mapping
-- ✅ **Map Server**: GeoServer: 2.28.2 with automatic configuration
-- ✅ **Database**: PostgreSQL: 16 + PostGIS 3.4 with sample data
+- ✅ **Frontend**: React 18 with OpenLayers 8 for interactive mapping
+- ✅ **Map Server**: GeoServer 2.24 with automatic configuration
+- ✅ **Database**: PostgreSQL 15 + PostGIS 3.4 with sample data
 - ✅ **Deployment**: Docker Compose orchestration
 - ✅ **Documentation**: Comprehensive guides in Vietnamese
 
@@ -22,13 +22,13 @@ A complete open-source GIS solution has been successfully implemented with:
    - Health checks enabled
 
 2. **geoserver** (Port 8080)
-   - Image: kartoza/GeoServer: 2.28.2.0
+   - Image: kartoza/geoserver:2.24.0
    - Auto-configuration script included
    - PostGIS datastore integration
    - WMS/WFS services ready
 
 3. **backend** (Port 8000)
-   - FastAPI Python: 3.12
+   - FastAPI Python 3.11
    - REST API with full CRUD operations
    - Spatial query support (bbox, intersect, buffer, within)
    - File upload (Shapefile, GeoJSON)
@@ -37,7 +37,7 @@ A complete open-source GIS solution has been successfully implemented with:
 
 4. **frontend** (Port 3000)
    - React 18 with hooks
-   - OpenLayers 9 map component
+   - OpenLayers 8 map component
    - Layer management UI
    - File upload with drag & drop
    - Spatial query interface
@@ -183,8 +183,8 @@ docker-compose exec backend python scripts/geoserver-init.py
 ## Technology Stack
 
 ### Backend
-- Python: 3.12
-- FastAPI: 0.109+
+- Python 3.11
+- FastAPI 0.104+
 - SQLAlchemy 2.0+
 - GeoAlchemy2 0.14+
 - psycopg2-binary 2.9+
@@ -193,17 +193,17 @@ docker-compose exec backend python scripts/geoserver-init.py
 
 ### Frontend
 - React 18.2
-- OpenLayers 9.2
+- OpenLayers 8.2
 - Axios 1.6
 - React Router DOM 6.20
 - React Toastify 9.1
 
 ### Database
-- PostgreSQL: 16
+- PostgreSQL 15
 - PostGIS 3.4
 
 ### Map Server
-- GeoServer: 2.28.2
+- GeoServer 2.24
 
 ### DevOps
 - Docker 20+

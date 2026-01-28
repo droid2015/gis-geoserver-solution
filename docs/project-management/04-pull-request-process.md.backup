@@ -62,7 +62,7 @@ Format:  [Issue #X] Short description
 
 ```markdown
 ## 📝 Description
-Setup PostgreSQL: 16 + PostGIS 3.4 on database server với performance configuration
+Setup PostgreSQL 15 + PostGIS 3.4 on database server với performance configuration
 
 Closes #2
 
@@ -74,7 +74,7 @@ Closes #2
 - [ ] ♻️ Refactoring
 
 ## 📦 Changes Made
-- Installed PostgreSQL: 16 from official repository
+- Installed PostgreSQL 15 from official repository
 - Installed PostGIS 3.4 extension
 - Created database `gisdb` and user `gisuser`
 - Configured postgresql.conf:
@@ -111,7 +111,7 @@ Closes #2
 - Blocks #10 (Authentication API - can now proceed)
 
 ## 📝 Additional Notes
-Chose PostgreSQL: 16 over 14 for better performance with large spatial datasets.
+Chose PostgreSQL 15 over 14 for better performance with large spatial datasets.
 PostGIS 3.4 required for new ST_MakeValid() function. 
 
 Estimated vs Actual time:  8h estimated, 9h actual (1h spent on troubleshooting pg_hba.conf)
@@ -434,7 +434,7 @@ Use when: Feature has many WIP commits
 Final commit message:
 [Issue #2] Setup PostgreSQL + PostGIS (#45)
 
-* Install PostgreSQL: 16
+* Install PostgreSQL 15
 * Install PostGIS 3.4
 * Configure for production
 * Add tests

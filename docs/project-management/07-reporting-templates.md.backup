@@ -646,7 +646,7 @@ Contact Project Manager:
 
 **Acceptance Criteria:**
 - [x] Docker installed and running on both servers
-- [x] PostgreSQL: 16 + PostGIS 3.4 running
+- [x] PostgreSQL 15 + PostGIS 3.4 running
 - [x] Database accessible from app server
 - [x] Git repository created with branch structure
 - [x] CI/CD pipeline configured and tested

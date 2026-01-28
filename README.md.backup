@@ -4,7 +4,7 @@ Giải pháp GIS mã nguồn mở hoàn chỉnh sử dụng GeoServer, PostgreSQ
 
 ## ✨ Tính năng
 
-- 🗺️ Interactive web map với OpenLayers 9
+- 🗺️ Interactive web map với OpenLayers 8
 - 📊 Quản lý layers và spatial data
 - ⬆️ Upload Shapefile và GeoJSON
 - 🔍 Spatial queries và analysis (bbox, intersect, buffer, within)
@@ -39,10 +39,10 @@ Giải pháp GIS mã nguồn mở hoàn chỉnh sử dụng GeoServer, PostgreSQ
 ```
 
 **Tech Stack:**
-- **Frontend**: React 18 + OpenLayers 9
-- **Backend**: FastAPI (Python: 3.12)
-- **Database**: PostgreSQL: 16 + PostGIS 3.4
-- **Map Server**: GeoServer: 2.28.2
+- **Frontend**: React 18 + OpenLayers 8
+- **Backend**: FastAPI (Python 3.11)
+- **Database**: PostgreSQL 15 + PostGIS 3.4
+- **Map Server**: GeoServer 2.24
 - **Deployment**: Docker Compose
 
 ## 🚀 Quick Start

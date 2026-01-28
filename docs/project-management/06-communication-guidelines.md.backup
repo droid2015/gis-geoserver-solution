@@ -68,7 +68,7 @@ More details
 ## Progress Update - 2025-12-30
 
 ✅ **Completed:**
-- Installed PostgreSQL: 16
+- Installed PostgreSQL 15
 - Created database `gisdb`
 - Configured performance settings
 
