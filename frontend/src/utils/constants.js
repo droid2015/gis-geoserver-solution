@@ -6,7 +6,7 @@ export const MAP_CENTER = [
   parseFloat(process.env.REACT_APP_MAP_CENTER_LAT) || 16.0,
 ];
 
-export const MAP_ZOOM = parseInt(process.env.REACT_APP_MAP_ZOOM) || 6;
+export const MAP_ZOOM = parseInt(process.env.REACT_APP_MAP_ZOOM) || 12;
 
 export const DRAW_TYPES = {
   POINT: 'Point',

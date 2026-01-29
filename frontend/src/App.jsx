@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from './components/Layout/Layout';
 import Sidebar, { SidebarTab } from './components/Layout/Sidebar';
 import MapComponent from './components/Map/Map';
+import BaseMapSelector from './components/Map/BaseMapSelector';
 import LayerList from './components/Layers/LayerList';
 import FileUpload from './components/Upload/FileUpload';
 import SpatialQuery from './components/Query/SpatialQuery';
@@ -15,6 +16,7 @@ import './App.css';
 function App() {
   const [mapLayers, setMapLayers] = useState([]);
   const [queryResults, setQueryResults] = useState(null);
+  const [currentBasemap, setCurrentBasemap] = useState('osm');
 
   useEffect(() => {
     // Load initial data
@@ -33,6 +35,32 @@ function App() {
     } catch (error) {
       console.error('Error loading initial layers:', error);
     }
+  };
+
+  const handleBasemapChange = (basemapType) => {
+    setCurrentBasemap(basemapType);
+    if (basemapType === 'oracle') {
+      loadOracleBasemap();
+    } else {
+      // Remove oracle basemap if switching to OSM
+      setMapLayers((prev) => prev.filter((l) => l.name !== 'oracle_basemap'));
+    }
+  };
+
+  const loadOracleBasemap = () => {
+    setMapLayers((prev) => [
+      ...prev.filter((l) => l.name !== 'oracle_basemap'),
+      {
+        name: 'oracle_basemap',
+        type: 'xyz',
+        url: 'http://localhost:8081/tiles/oracle_basemap/{z}/{x}/{y}.png',
+        visible: true,
+        opacity: 1.0,
+        minZoom: 10,
+        maxZoom: 15,
+        isBaseLayer: true
+      },
+    ]);
   };
 
   const loadGeoServerHighways = () => {
@@ -158,6 +186,12 @@ function App() {
   return (
     <Layout>
       <Sidebar>
+        <SidebarTab tabId="basemap">
+          <BaseMapSelector 
+            selectedBasemap={currentBasemap}
+            onBasemapChange={handleBasemapChange} 
+          />
+        </SidebarTab>
         <SidebarTab tabId="layers">
           <LayerList onLayersChange={handleLayersChange} />
         </SidebarTab>
@@ -169,7 +203,11 @@ function App() {
         </SidebarTab>
       </Sidebar>
       <div className="map-container-wrapper">
-        <MapComponent layers={mapLayers} onFeatureClick={handleFeatureClick} />
+        <MapComponent 
+          layers={mapLayers} 
+          basemapType={currentBasemap}
+          onFeatureClick={handleFeatureClick} 
+        />
       </div>
       <ToastContainer position="bottom-right" autoClose={3000} />
     </Layout>

@@ -111,6 +111,17 @@ services:
     stdin_open: true
     tty: true
 
+  tile-server:
+    image: nginx:alpine
+    container_name: tile-server
+    volumes:
+      - ./geoserver_data/tiles:/usr/share/nginx/html/tiles
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "8081:80"
+    networks:
+      - gis-network
+
 networks:
   gis-network:
     driver: bridge

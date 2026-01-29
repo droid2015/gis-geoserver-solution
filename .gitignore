@@ -31,7 +31,9 @@ geoserver_data/
 # Uploads
 uploads/
 temp/
-
+scripts/.env.oracle
+scripts/tiles_output/
+geoserver_data/tiles/
 # OS
 .DS_Store
 Thumbs.db

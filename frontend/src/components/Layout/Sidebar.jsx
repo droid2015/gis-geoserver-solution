@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 
 const Sidebar = ({ children }) => {
-  const [activeTab, setActiveTab] = useState('layers');
+  const [activeTab, setActiveTab] = useState('basemap');
 
   const tabs = [
+    { id: 'basemap', label: 'Basemap' },
     { id: 'layers', label: 'Layers' },
     { id: 'upload', label: 'Upload' },
     { id: 'query', label: 'Query' },

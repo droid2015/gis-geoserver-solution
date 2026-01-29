@@ -1,0 +1,77 @@
+.basemap-selector {
+  padding: 15px;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.basemap-selector h3 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #3399CC;
+  padding-bottom: 8px;
+}
+
+.basemap-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.basemap-option {
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 12px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.basemap-option:hover {
+  border-color: #3399CC;
+  background-color: #f5f9fc;
+}
+
+.basemap-option label {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  width: 100%;
+}
+
+.basemap-option input[type="radio"] {
+  margin-top: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  accent-color: #3399CC;
+}
+
+.basemap-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.basemap-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.basemap-description {
+  font-size: 12px;
+  color: #666;
+}
+
+.basemap-option input[type="radio"]:checked ~ .basemap-info .basemap-name {
+  color: #3399CC;
+}
+
+.basemap-option:has(input[type="radio"]:checked) {
+  border-color: #3399CC;
+  background-color: #f0f7fb;
+}

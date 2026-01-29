@@ -3,6 +3,7 @@ import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
 import TileWMS from 'ol/source/TileWMS';
+import XYZ from 'ol/source/XYZ';
 import OSM from 'ol/source/OSM';
 import { fromLonLat } from 'ol/proj';
 import { defaults as defaultControls, ScaleLine, FullScreen, MousePosition } from 'ol/control';
@@ -14,7 +15,7 @@ import { Circle as CircleStyle, Fill, Stroke, Style } from 'ol/style';
 import './Map.css';
 import { MAP_CENTER, MAP_ZOOM } from '../../utils/constants';
 
-const MapComponent = ({ layers, onFeatureClick }) => {
+const MapComponent = ({ layers, basemapType = 'osm', onFeatureClick }) => {
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const [mapReady, setMapReady] = useState(false);
@@ -22,10 +23,13 @@ const MapComponent = ({ layers, onFeatureClick }) => {
   useEffect(() => {
     if (!mapRef.current) return;
 
-    // Create base layer
+    // Create base layer (OSM as default)
     const baseLayer = new TileLayer({
       source: new OSM(),
-      properties: { name: 'OSM Base Map' },
+      properties: { 
+        name: 'OSM Base Map',
+        isBaseLayer: true 
+      },
     });
 
     // Mouse position control
@@ -75,6 +79,48 @@ const MapComponent = ({ layers, onFeatureClick }) => {
     };
   }, [onFeatureClick]);
 
+  // Handle basemap switching
+  useEffect(() => {
+    if (!mapReady || !mapInstanceRef.current) return;
+
+    const map = mapInstanceRef.current;
+    const layers = map.getLayers().getArray();
+    
+    // Find and remove existing base layer
+    const baseLayer = layers.find(l => l.get('isBaseLayer'));
+    if (baseLayer) {
+      map.removeLayer(baseLayer);
+    }
+
+    // Add new base layer based on selected type
+    let newBaseLayer;
+    if (basemapType === 'oracle') {
+      newBaseLayer = new TileLayer({
+        source: new XYZ({
+          url: 'http://localhost:8081/tiles/oracle_basemap/{z}/{x}/{y}.png',
+          maxZoom: 15,
+          minZoom: 10,
+          crossOrigin: 'anonymous'
+        }),
+        properties: { 
+          name: 'Oracle Base Map',
+          isBaseLayer: true 
+        }
+      });
+    } else {
+      newBaseLayer = new TileLayer({
+        source: new OSM(),
+        properties: { 
+          name: 'OSM Base Map',
+          isBaseLayer: true 
+        }
+      });
+    }
+
+    // Insert base layer at the bottom (index 0)
+    map.getLayers().insertAt(0, newBaseLayer);
+  }, [basemapType, mapReady]);
+
   // Update layers
   useEffect(() => {
     if (!mapReady || !mapInstanceRef.current) return;
@@ -83,18 +129,40 @@ const MapComponent = ({ layers, onFeatureClick }) => {
     const currentLayers = map.getLayers().getArray();
 
     // Remove all non-base layers
-    currentLayers.forEach((layer, index) => {
-      if (index > 0) {
-        map.removeLayer(layer);
+    const layersToRemove = [];
+    currentLayers.forEach((layer) => {
+      const isBaseLayer = layer.get('isBaseLayer');
+      if (!isBaseLayer) {
+        layersToRemove.push(layer);
       }
     });
+    layersToRemove.forEach(layer => map.removeLayer(layer));
 
     // Add new layers
-    layers.forEach((layerConfig) => {
-      if (!layerConfig.visible) return;
 
+    // Add new layers (excluding basemaps)
+    layers.forEach((layerConfig) => {
+      if (!layerConfig.visible || layerConfig.isBaseLayer) return;
+
+      // XYZ Tile Layer (for Oracle basemap)
+      if (layerConfig.type === 'xyz') {
+        const xyzLayer = new TileLayer({
+          source: new XYZ({
+            url: layerConfig.url,
+            maxZoom: layerConfig.maxZoom || 18,
+            minZoom: layerConfig.minZoom || 0,
+            crossOrigin: 'anonymous'
+          }),
+          opacity: layerConfig.opacity || 1.0,
+          properties: { 
+            name: layerConfig.name,
+            isBaseLayer: layerConfig.isBaseLayer || false
+          }
+        });
+        map.addLayer(xyzLayer);
+      }
       // GeoServer WMS Layer
-      if (layerConfig.type === 'wms') {
+      else if (layerConfig.type === 'wms') {
         const wmsLayer = new TileLayer({
           source: new TileWMS({
             url: layerConfig.url || 'http://localhost:8080/geoserver/wms',
